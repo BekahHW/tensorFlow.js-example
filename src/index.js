@@ -1,49 +1,101 @@
 import * as tf from "@tensorflow/tfjs";
 
-//our first tensor
-// const dataArray = [8, 6, 7, 5, 3, 0, 9];
+// const a = tf.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0], [3, 3]);
+// // console.log(a);
 
-// const first = tf.tensor(dataArray);
-// console.log(first);
+// const b = tf.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0], [3, 3], "int32");
+// // console.log(b);
 
-// const first_again = tf.tensor1d(dataArray);
+// // convert to int
+// const nope = tf.tensor([4], null, "float32");
+// //console.log(nope)
+// const yep = nope.asType("int32");
+// //console.log(yep);
+// console.log(tf.memory().numTensors);
+// console.log(tf.memory().numBytes);
+//***
+//CLEANUP SECTION
+//***
 
-// console.log("first_again:", first_again);
+//Start at 0 tensors
 
-// defining type
+// console.log("start", tf.memory().numTensors);
 
-const float32 = tf.tensor([1.1, 2.2, 3.3], null, "float32");
+// let keeper, chaser, seeker, beater;
 
-// console.log(float32);
+// //create tensors inside a tidy
 
-//We specify here that this type is int32, but what happens if we don't specify? What do you think it will be?
+// tf.tidy(() => {
+//   keeper = tf.tensor([1, 2, 3]);
+//   chaser = tf.tensor([1, 2, 3]);
+//   seeker = tf.tensor([1, 2, 3]);
+//   beater = tf.tensor([1, 2, 3]);
+//   console.log("inside tidy", tf.memory().numTensors);
 
-const int32 = tf.tensor([1, 2, 3], null, "int32");
-//console.log(int32);
+//   // let's protect one
+//   tf.keep(keeper);
+//   return chaser;
+// });
 
-//notice this is an inferred type
-const boolean = tf.tensor([true, false, false], null);
-//console.log(boolean);
+// // Two down
+// console.log("after tidy", tf.memory().numTensors);
 
-// Guess what this will return
-// Bc we specify, the Boolean values are ti 0 for false and 1 for true. So the variable data would look like[1, 0, 0]
-const guess = tf.tensor([true, false, false], null, "int32");
-//console.log(guess);
+// keeper.dispose();
+//  chaser.dispose();
+//  //You can also do it this way
+// //tf.dispose(chaser);
+// //how many now?
+// console.log("END", tf.memory().numTensors);
+// ***
+// TENSORS COME HOME
+// ***
 
-//What do you think about this one?
-//Did you guess error? Nope. It's a float32 bc the input values get converted to corresponding Float 32, whilch looks like [1, 1.3445566, 0]
-const last_one = tf.tensor([1, 1.3445566, false]);
-// console.log(last_one);
+// const tensorArray = [];
+// for (let i = 0; i < 10; i++) {
+//   tensorArray.push(tf.tensor([i, i, i]));
+//   //   console.log(tensorArray);
+// }
 
-//Let's do some application
+// // console.log(tensorArray[4]);
+// tf.print(tensorArray[4]);
 
-const newArray = tf.tensor1d([8, 9, 0, 7, 7, 5]);
+// tf.dispose(tensorArray[4]);
+// // console.log(tensorArray);
+// console.log("END", tf.memory().numTensors);
 
-try {
-  const nope = tf.tensor1d([[1], [2]]);
-} catch (e) {
-  console.log("That's a negative");
-}
-console.log("Rank:", newArray.rank);
-console.log("size:", newArray.size);
-console.log("dtype:", newArray.dtype);
+// ***
+// RETRIEVING TENSOR DATA
+// ***
+
+// const one = tf.tensor([1, 2, 3]);
+// const two = tf.tensor([13.23]);
+// const three = tf.tensor([
+//   [1, 2, 3],
+//   [1, 2, 3],
+// ]);
+// //console.log("ArraySync", three.arraySync());
+// console.log("dataSync", three.dataSync());
+
+// ***
+// TENSORS AND MATHEMATICS 60
+// ***
+const mat1 = [
+  [1, 23, 83],
+  [33, 12, 5],
+  [7, 23, 61],
+];
+
+const mat2 = [
+  [91, 82, 13],
+  [15, 23, 62],
+  [25, 66, 63],
+];
+
+tf.matMul(mat1, mat2).print();
+
+//answer:
+[
+  [2511, 6089, 6668],
+  [3308, 3312, 1488],
+  [2507, 5129, 5360],
+];
